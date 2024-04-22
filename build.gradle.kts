@@ -6,6 +6,19 @@ plugins {
 	kotlin("jvm") version "1.9.23"
 	kotlin("plugin.spring") version "1.9.23"
 	kotlin("plugin.jpa") version "1.9.23"
+	kotlin("plugin.allopen") version "1.9.22"
+	kotlin("plugin.noarg") version "1.9.23"
+}
+
+allOpen {
+	annotation("jakarta.persistence.Entity")
+	annotation("jakarta.persistence.Embeddable")
+	annotation("jakarta.persistence.MappedSuperclass")
+}
+
+noArg {
+	annotation("com.api.cobroking.annotation.NoArg")
+	invokeInitializers = true
 }
 
 group = "com.api.cobroking"
@@ -26,7 +39,7 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui")
+	//implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation("org.springframework.boot:spring-boot-starter-data-rest")
@@ -34,19 +47,19 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-mail")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.flywaydb:flyway-core")
 	implementation("org.flywaydb:flyway-mysql")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	compileOnly("org.projectlombok:lombok")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 	runtimeOnly("com.mysql:mysql-connector-j")
 	runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
-	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.springframework:spring-webflux")
 	testImplementation("org.springframework.graphql:spring-graphql-test")
+	testImplementation("org.springframework.security:spring-security-test")
 	implementation(kotlin("stdlib-jdk8"))
 }
 
@@ -62,9 +75,9 @@ tasks.withType<Test> {
 }
 val compileKotlin: KotlinCompile by tasks
 compileKotlin.kotlinOptions {
-	jvmTarget = "1.8"
+	jvmTarget = "21"
 }
 val compileTestKotlin: KotlinCompile by tasks
 compileTestKotlin.kotlinOptions {
-	jvmTarget = "1.8"
+	jvmTarget = "21"
 }
