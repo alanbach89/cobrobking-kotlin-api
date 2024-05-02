@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 @Service
 class UserService(private val userRepository: UserRepository) {
 
-    fun createUser(newUserDto: UserDto): UserDto {
+    fun create(newUserDto: UserDto): UserDto {
         if (userRepository.existsUserByUsername(newUserDto.username)) {
             throw UserExistsException()
         }
@@ -18,7 +18,7 @@ class UserService(private val userRepository: UserRepository) {
         return savedUser.toUserDto()
     }
 
-    fun getUserById(id: Long): UserDto {
+    fun getById(id: Long): UserDto {
         try {
             return userRepository.getReferenceById(id).toUserDto()
         } catch (e: EntityNotFoundException) {
@@ -26,7 +26,7 @@ class UserService(private val userRepository: UserRepository) {
         }
     }
 
-    fun updateUser(id: Long, updatedUserDto: UserDto): UserDto {
+    fun update(id: Long, updatedUserDto: UserDto): UserDto {
         lateinit var dbUser: User
         try {
             dbUser = userRepository.getReferenceById(id)
@@ -38,7 +38,7 @@ class UserService(private val userRepository: UserRepository) {
         return savedUser.toUserDto()
     }
 
-    fun getAllUsers(): List<UserDto> {
+    fun getAll(): List<UserDto> {
         return userRepository.findAll().map { return@map it.toUserDto() }
     }
 }

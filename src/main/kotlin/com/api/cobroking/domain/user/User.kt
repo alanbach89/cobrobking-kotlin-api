@@ -1,11 +1,15 @@
 package com.api.cobroking.domain.user
 
 import com.api.cobroking.annotation.NoArg
+import com.api.cobroking.domain.conversation.PrivateConversation
+import com.api.cobroking.domain.conversation.PrivateMessage
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.ManyToMany
+import jakarta.persistence.OneToMany
 import jakarta.validation.constraints.Email
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -13,7 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails
 
 @Entity
 @NoArg
-class User(
+data class User(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long?,
     @Email
@@ -33,6 +37,12 @@ class User(
     var documentType: DocumentTypeEnum,
     var phone: String,
 
+    @OneToMany(mappedBy = "user")
+    val sentMessages: List<PrivateMessage> = listOf(),
+
+    @ManyToMany(mappedBy = "participants")
+    val conversations: List<PrivateConversation> = listOf(),
+
     // inherits from UserDetails
     private var username: String,
     private val password: String,
@@ -45,8 +55,8 @@ class User(
 ) : UserDetails {
 
     constructor() : this(null, "", UserTypeEnum.NON_PAID_CUSTOMER, "", "", "",
-        "", DocumentTypeEnum.DNI, "", "", "", false, false,
-        false, false, mutableSetOf())
+        "", DocumentTypeEnum.DNI, "", listOf(), listOf(),"", "", false,
+        false, false, false, setOf())
 
     override fun getUsername(): String = username
     override fun getPassword(): String = password
