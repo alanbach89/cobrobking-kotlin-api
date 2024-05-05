@@ -1,5 +1,6 @@
 package com.api.cobroking.domain.conversation
 
+import com.api.cobroking.domain.Utils
 import com.api.cobroking.domain.exception.PrivateConversationExistsException
 import com.api.cobroking.domain.exception.PrivateConversationNotFoundException
 import com.api.cobroking.domain.exception.PrivateMessageNotFoundException
@@ -14,6 +15,7 @@ import java.time.Instant
 
 @Service
 class PrivateConversationService(private val privateConversationRepository: PrivateConversationRepository,
+                                 private val privateMessageRepository: PrivateMessageRepository,
                                  private val userRepository: UserRepository) {
 
     fun create(newPrivateConversationDto: PrivateConversationDto): PrivateConversationDto {
@@ -59,7 +61,7 @@ class PrivateConversationService(private val privateConversationRepository: Priv
                 privateMessageDto.privateConversationId)
             if(dbPrivateConversation.participants.find { user -> user.username == privateMessageDto.user } == null) {
                 throw EntityNotFoundException()
-            } else if (privateMessageDto.user != userlocalSession) {
+            } else if (privateMessageDto.user != Utils.getCurrentUsername()) {
                 throw InvalidParameterException("Usuario invalido")
             }
             dbPrivateMessage = PrivateMessage(
@@ -85,7 +87,7 @@ class PrivateConversationService(private val privateConversationRepository: Priv
             dbPrivateConversation = privateConversationRepository.findPrivateConversationsById(
                 privateMessageDto.privateConversationId)
             //Aca tiene que ser el usuario de la sesion
-            if(dbPrivateConversation.participants.find { user -> user.username == userlocalSession } == null) {
+            if(dbPrivateConversation.participants.find { user -> user.username == Utils.getCurrentUsername() } == null) {
                 throw EntityNotFoundException()
             }
         } catch (e: EntityNotFoundException) {
@@ -98,8 +100,8 @@ class PrivateConversationService(private val privateConversationRepository: Priv
                 throw EntityNotFoundException()
             } else if (validateEditionMessageTimestamp(dbPrivateMessage.timestamp)) {
                 throw InvalidParameterException("El mensaje no se puede editar")
-            } else if (dbPrivateMessage.user.username != userlocalSession) {
-                throw InvalidParameterException("El mensaje no se puede eliminar")
+            } else if (dbPrivateMessage.user.username != Utils.getCurrentUsername()) {
+                throw InvalidParameterException("El mensaje no se puede editar")
             }
             dbPrivateMessage.updateFromDto(privateMessageDto)
         } catch (e: EntityNotFoundException) {
@@ -109,27 +111,17 @@ class PrivateConversationService(private val privateConversationRepository: Priv
         return dbPrivateMessage.toPrivateMessageDto()
     }
 
-    fun deleteMessage(privateConversationId: Long, privateMessageId: Long): PrivateMessageDto {
-        lateinit var dbPrivateConversation: PrivateConversation
+    fun deleteMessage(privateMessageId: Long): PrivateMessageDto {
         lateinit var dbPrivateMessage: PrivateMessage
-        try {
-            dbPrivateConversation = privateConversationRepository.findPrivateConversationsById(
-                privateConversationId)
-            //Aca tiene que ser el usuario de la sesion
-            if(dbPrivateConversation.participants.find { user -> user.username == userlocalSession } == null) {
-                throw EntityNotFoundException()
-            }
-        } catch (e: EntityNotFoundException) {
-            throw PrivateConversationNotFoundException()
-        }
 
         try {
-            dbPrivateMessage = dbPrivateConversation.privateMessages.find { msg -> msg.id == privateMessageId }!!
+            dbPrivateMessage =  privateMessageRepository.getReferenceById(privateMessageId);
+
             if (dbPrivateMessage == null) {
                 throw EntityNotFoundException()
             } else if (validateEditionMessageTimestamp(dbPrivateMessage.timestamp)) {
                 throw InvalidParameterException("El mensaje no se puede eliminar")
-            } else if (dbPrivateMessage.user.username != userlocalSession) {
+            } else if (dbPrivateMessage.user.username != Utils.getCurrentUsername()) {
                 throw InvalidParameterException("El mensaje no se puede eliminar")
             }
             dbPrivateMessage.setDeleteStatus()

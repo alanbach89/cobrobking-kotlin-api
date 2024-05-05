@@ -17,4 +17,5 @@ interface PrivateConversationRepository : JpaRepository<PrivateConversation, Lon
     @Query("SELECT pc FROM PrivateConversation pc WHERE SIZE(pc.users) = :numUsers AND :numUsers = (SELECT COUNT(u) FROM User u WHERE u IN :users)")
     fun findByAllUsers(users: List<User?>, numUsers: Int): Optional<List<PrivateConversation?>>
 
+    fun findPrivateConversationsByMessageId(id: Long): PrivateConversation
 }

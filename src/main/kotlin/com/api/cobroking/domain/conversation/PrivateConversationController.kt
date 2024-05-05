@@ -12,13 +12,13 @@ class PrivateConversationController(private val privateConversationService: Priv
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     fun createPrivateConversation(@RequestBody privateConversationDto: PrivateConversationDto): PrivateConversationDto {
-        return privateConversationService.create(privateConversationDto);
+        return privateConversationService.create(privateConversationDto)
     }
 
     @GetMapping()
     @ResponseBody
     fun getPrivateConversation(@RequestParam id: Long): PrivateConversationDto {
-        return privateConversationService.getById(id);
+        return privateConversationService.getById(id)
     }
 
     //TODO: hacer bien el mapping del tipo /privateConversations/{id}/messages/{id}
@@ -27,18 +27,18 @@ class PrivateConversationController(private val privateConversationService: Priv
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     fun sendMessage(@RequestBody privateMessage: PrivateMessageDto): PrivateMessageDto {
-        return privateConversationService.sendMessage(privateMessage);
+        return privateConversationService.sendMessage(privateMessage)
     }
 
     @PutMapping()
     @ResponseBody
     fun editMessage(@RequestParam id: Long, @RequestBody privateMessage: PrivateMessageDto): PrivateMessageDto {
-        return privateConversationService.editMessage(privateMessage);
+        return privateConversationService.editMessage(privateMessage)
     }
 
     @DeleteMapping()
     @ResponseBody
     fun deleteMessage(@RequestParam id: Long): PrivateMessageDto {
-        return privateConversationService.deleteMessage(id);
+        return privateConversationService.deleteMessage(id)
     }
 }

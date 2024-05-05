@@ -24,7 +24,7 @@ data class User(
     @Column(nullable = false)
     var email: String,
     @Column(nullable = false)
-    var userType: UserTypeEnum,
+    var type: UserTypeEnum,
     @Column(nullable = false)
     var firstname: String,
     @Column(nullable = false)
@@ -68,7 +68,7 @@ data class User(
 
     fun updateFromDto(userDto: UserDto): User {
         this.email = email
-        this.userType = userType
+        this.type
         this.firstname = firstname
         this.lastname = lastname
         this.documentType = documentType
@@ -80,7 +80,7 @@ data class User(
     fun createFromDto(userDto: UserDto): User {
         this.username = username
         this.email = email
-        this.userType = userType
+        this.type
         this.firstname = firstname
         this.lastname = lastname
         this.documentType = documentType
