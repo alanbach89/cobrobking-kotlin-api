@@ -30,16 +30,3 @@ data class UserDto(
     @field:NotBlank
     val phone: String
 )
-
-fun User.toUserDto() = UserDto(
-    id = id,
-    username = username,
-    email = email,
-    type = type,
-    firstname = firstname,
-    lastname = lastname,
-    document = document,
-    documentType = documentType,
-    nationality = nationality,
-    phone = phone
-)

@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/privateConversations")
+@RequestMapping("/private-conversations")
 class PrivateConversationController(private val privateConversationService: PrivateConversationService) {
 
 
@@ -15,7 +15,7 @@ class PrivateConversationController(private val privateConversationService: Priv
         return privateConversationService.create(privateConversationDto)
     }
 
-    @GetMapping()
+   @GetMapping("/{id}")
     @ResponseBody
     fun getPrivateConversation(@RequestParam id: Long): PrivateConversationDto {
         return privateConversationService.getById(id)
@@ -30,7 +30,7 @@ class PrivateConversationController(private val privateConversationService: Priv
         return privateConversationService.sendMessage(privateMessage)
     }
 
-    @PutMapping()
+    @PutMapping("/{id}")
     @ResponseBody
     fun editMessage(@RequestParam id: Long, @RequestBody privateMessage: PrivateMessageDto): PrivateMessageDto {
         return privateConversationService.editMessage(privateMessage)

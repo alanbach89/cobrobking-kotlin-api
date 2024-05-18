@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface RatingRepository : JpaRepository<Rating, Long> {
 
-    fun existsRatingByTypeAndPublicationId(type: RatingType, publicationId: Long): Boolean
+    fun existsRatingByTypeAndPublicationId(type: PublicationType, publicationId: Long): Boolean
 
 
 }

@@ -13,16 +13,7 @@ class PrivateMessageDto(
     val timestamp: Timestamp? = null,
     val status: MessageStatus = MessageStatus.CREATED,
     @field:NotBlank
-    val user: String,
+    val userId: Long,
     @field:NotBlank
     val privateConversationId: Long,
-)
-
-fun PrivateMessage.toPrivateMessageDto() = PrivateMessageDto(
-    id = id,
-    text = if (status == MessageStatus.DELETED) "" else text,
-    timestamp = timestamp,
-    status = status,
-    user = user.username,
-    privateConversationId = privateConversation.id!!,
 )

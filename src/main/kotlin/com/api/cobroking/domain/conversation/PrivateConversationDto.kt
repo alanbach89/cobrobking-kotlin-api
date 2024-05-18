@@ -14,10 +14,3 @@ data class PrivateConversationDto(
     val participants: List<String>,
     val privateMessages: List<PrivateMessageDto>? = listOf(),
 )
-
-fun PrivateConversation.toPrivateConversationDto() = PrivateConversationDto(
-    id = id,
-    title = title,
-    participants = participants.map { return@map it.username }.toList(),
-    privateMessages = privateMessages.map { return@map it.toPrivateMessageDto() }.toList(),
-)

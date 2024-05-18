@@ -23,14 +23,14 @@ class RatingController(val ratingService : RatingService) {
     }
 
     /*
-    @PutMapping()
+    @PutMapping("/{id}")
     @ResponseBody
     fun updateRating(@RequestParam id: Long, @RequestBody ratingDto: RatingDto): RatingDto {
         return ratingService.update(id, ratingDto);
     }
      */
 
-    @GetMapping()
+   @GetMapping("/{id}")
     @ResponseBody
     fun getRating(@RequestParam id: Long): RatingDto {
         return ratingService.getById(id);

@@ -1,4 +1,4 @@
-package com.api.cobroking.domain.exception
+package com.api.cobroking.base.exception
 
 class PrivateConversationNotFoundException(
     message: String? = "Private conversation not found"

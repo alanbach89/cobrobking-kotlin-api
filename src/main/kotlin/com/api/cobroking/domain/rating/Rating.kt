@@ -11,7 +11,7 @@ class Rating (
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long?,
     @Column(nullable = false)
-    var type: RatingType,
+    var publicationType: PublicationType? = null,
     @Column(nullable = false)
     var publicationId: Long,
     @Column(nullable = false)
@@ -21,14 +21,23 @@ class Rating (
     var opinion: String?,
 
     @ManyToOne
-    var user: User,
+    var user: User
 ) {
 
     fun updateFromDto(ratingDto: RatingDto): Rating {
-        this.type = type
+        this.publicationType = publicationType
         this.publicationId = publicationId
         this.rating = rating
         this.opinion = opinion
         return this
     }
+
+    fun toRatingDto() = RatingDto(
+        id = id,
+        publicationType = publicationType,
+        publicationId = publicationId,
+        rating = rating,
+        opinion = opinion!!,
+        userId = user.id!!
+    )
 }

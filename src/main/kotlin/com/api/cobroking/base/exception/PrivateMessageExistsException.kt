@@ -1,4 +1,4 @@
-package com.api.cobroking.domain.exception
+package com.api.cobroking.base.exception
 
 class PrivateMessageExistsException(
     message: String? = "Private message with the same id already exists"

@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank
 data class RatingDto(
     val id: Long? = null,
     @field:NotBlank
-    var type: RatingType,
+    var publicationType: PublicationType?,
     @field:NotBlank
     var publicationId: Long,
     @field:NotBlank
@@ -16,14 +16,5 @@ data class RatingDto(
     var rating: Int,
     var opinion: String,
     @field:NotBlank
-    var username: String
-)
-
-fun Rating.toRatingDto() = RatingDto(
-    id = id,
-    type = type,
-    publicationId = publicationId,
-    rating = rating,
-    opinion = opinion!!,
-    username = user.username
+    var userId: Long
 )

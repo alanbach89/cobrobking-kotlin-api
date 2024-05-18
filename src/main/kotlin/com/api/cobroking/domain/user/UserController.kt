@@ -22,13 +22,13 @@ class UserController(val userService : UserService) {
         return userService.create(userDto);
     }
 
-    @PutMapping()
+    @PutMapping("/{id}")
     @ResponseBody
     fun updateUser(@RequestParam id: Long, @RequestBody userDto: UserDto): UserDto {
         return userService.update(id, userDto);
     }
 
-    @GetMapping()
+   @GetMapping("/{id}")
     @ResponseBody
     fun getUser(@RequestParam id: Long): UserDto {
         return userService.getById(id);

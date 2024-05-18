@@ -88,4 +88,17 @@ data class User(
         this.phone = phone
         return this
     }
+
+    fun toUserDto() = UserDto(
+        id = id,
+        username = username,
+        email = email,
+        type = type,
+        firstname = firstname,
+        lastname = lastname,
+        document = document,
+        documentType = documentType,
+        nationality = nationality,
+        phone = phone
+    )
 }

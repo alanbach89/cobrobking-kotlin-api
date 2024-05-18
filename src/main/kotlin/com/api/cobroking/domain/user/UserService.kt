@@ -1,15 +1,16 @@
 package com.api.cobroking.domain.user
 
-import com.api.cobroking.domain.exception.UserExistsException
-import com.api.cobroking.domain.exception.UserNotFoundException
+import com.api.cobroking.base.BaseService
+import com.api.cobroking.base.exception.UserExistsException
+import com.api.cobroking.base.exception.UserNotFoundException
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
 
 
 @Service
-class UserService(private val userRepository: UserRepository) {
+class UserService(private val userRepository: UserRepository) : BaseService<UserDto> {
 
-    fun create(newUserDto: UserDto): UserDto {
+    override fun create(newUserDto: UserDto): UserDto {
         if (userRepository.existsUserByUsername(newUserDto.username)) {
             throw UserExistsException()
         }
@@ -18,7 +19,7 @@ class UserService(private val userRepository: UserRepository) {
         return savedUser.toUserDto()
     }
 
-    fun getById(id: Long): UserDto {
+    override fun getById(id: Long): UserDto {
         try {
             return userRepository.getReferenceById(id).toUserDto()
         } catch (e: EntityNotFoundException) {
@@ -26,7 +27,7 @@ class UserService(private val userRepository: UserRepository) {
         }
     }
 
-    fun update(id: Long, updatedUserDto: UserDto): UserDto {
+    override fun update(id: Long, updatedUserDto: UserDto): UserDto {
         lateinit var dbUser: User
         try {
             dbUser = userRepository.getReferenceById(id)
@@ -38,7 +39,11 @@ class UserService(private val userRepository: UserRepository) {
         return savedUser.toUserDto()
     }
 
-    fun getAll(): List<UserDto> {
+    override fun getAll(): List<UserDto> {
         return userRepository.findAll().map { return@map it.toUserDto() }
+    }
+
+    override fun deleteById(id: Long) {
+        //("Not implemented")
     }
 }

@@ -1,4 +1,4 @@
-package com.api.cobroking.domain.exception
+package com.api.cobroking.base.exception
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

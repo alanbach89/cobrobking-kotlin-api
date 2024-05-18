@@ -1,4 +1,4 @@
-package com.api.cobroking.domain.exception
+package com.api.cobroking.base.exception
 
 class UserExistsException(
     message: String? = "User with the same username already exists"

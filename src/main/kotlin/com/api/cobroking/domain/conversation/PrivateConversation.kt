@@ -38,4 +38,11 @@ data class PrivateConversation(
         privateMessages.add(message)
         message.privateConversation = this
     }
+
+    fun toPrivateConversationDto() = PrivateConversationDto(
+        id = id,
+        title = title,
+        participants = participants.map { return@map it.username }.toList(),
+        privateMessages = privateMessages.map { return@map it.toPrivateMessageDto() }.toList(),
+    )
 }

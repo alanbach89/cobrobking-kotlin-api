@@ -1,9 +1,10 @@
 package com.api.cobroking.domain.conversation
 
-import com.api.cobroking.domain.Utils
-import com.api.cobroking.domain.exception.PrivateConversationExistsException
-import com.api.cobroking.domain.exception.PrivateConversationNotFoundException
-import com.api.cobroking.domain.exception.PrivateMessageNotFoundException
+import com.api.cobroking.base.BaseService
+import com.api.cobroking.domain.utils.Utils
+import com.api.cobroking.base.exception.PrivateConversationExistsException
+import com.api.cobroking.base.exception.PrivateConversationNotFoundException
+import com.api.cobroking.base.exception.PrivateMessageNotFoundException
 import com.api.cobroking.domain.user.User
 import com.api.cobroking.domain.user.UserRepository
 import jakarta.persistence.EntityNotFoundException
@@ -16,9 +17,10 @@ import java.time.Instant
 @Service
 class PrivateConversationService(private val privateConversationRepository: PrivateConversationRepository,
                                  private val privateMessageRepository: PrivateMessageRepository,
-                                 private val userRepository: UserRepository) {
+                                 private val userRepository: UserRepository
+                                 ): BaseService<PrivateConversationDto> {
 
-    fun create(newPrivateConversationDto: PrivateConversationDto): PrivateConversationDto {
+    override fun create(newPrivateConversationDto: PrivateConversationDto): PrivateConversationDto {
         val participants = getUsersByUsernames(newPrivateConversationDto.participants)
         if (privateConversationRepository.findByAllUsers(participants, participants.size).isPresent) {
             throw PrivateConversationExistsException()
@@ -29,7 +31,7 @@ class PrivateConversationService(private val privateConversationRepository: Priv
         return savedPrivateConversation.toPrivateConversationDto()
     }
 
-    fun getById(id: Long): PrivateConversationDto {
+    override fun getById(id: Long): PrivateConversationDto {
         try {
             return privateConversationRepository.getReferenceById(id).toPrivateConversationDto()
         } catch (e: EntityNotFoundException) {
@@ -37,7 +39,11 @@ class PrivateConversationService(private val privateConversationRepository: Priv
         }
     }
 
-    fun update(id: Long, updatedPrivateConversationDto: PrivateConversationDto): PrivateConversationDto {
+    override fun deleteById(id: Long) {
+        //("Not implemented")
+    }
+
+    override fun update(id: Long, updatedPrivateConversationDto: PrivateConversationDto): PrivateConversationDto {
         lateinit var dbPrivateConversation: PrivateConversation
         try {
             dbPrivateConversation = privateConversationRepository.getReferenceById(id)
@@ -49,19 +55,21 @@ class PrivateConversationService(private val privateConversationRepository: Priv
         return savedPrivateConversation.toPrivateConversationDto()
     }
 
-    fun getAll(): List<PrivateConversationDto> {
+    override fun getAll(): List<PrivateConversationDto> {
         return privateConversationRepository.findAll().map { return@map it.toPrivateConversationDto() }
     }
 
     fun sendMessage(privateMessageDto: PrivateMessageDto): PrivateMessageDto {
         lateinit var dbPrivateConversation: PrivateConversation
         lateinit var dbPrivateMessage: PrivateMessage
+        lateinit var currentUser: User
         try {
             dbPrivateConversation = privateConversationRepository.findPrivateConversationsById(
                 privateMessageDto.privateConversationId)
-            if(dbPrivateConversation.participants.find { user -> user.username == privateMessageDto.user } == null) {
+            currentUser = dbPrivateConversation.participants.find { user -> user.id == privateMessageDto.userId }!!
+            if(currentUser == null) {
                 throw EntityNotFoundException()
-            } else if (privateMessageDto.user != Utils.getCurrentUsername()) {
+            } else if (currentUser.username != Utils.getCurrentUsername()) {
                 throw InvalidParameterException("Usuario invalido")
             }
             dbPrivateMessage = PrivateMessage(
@@ -69,7 +77,7 @@ class PrivateConversationService(private val privateConversationRepository: Priv
                 privateMessageDto.text,
                 Timestamp.from(Instant.now()),
                 MessageStatus.CREATED,
-                userRepository.getByUsername(privateMessageDto.user)!!,
+                userRepository.getReferenceById(privateMessageDto.userId)!!,
                 dbPrivateConversation
             )
             dbPrivateConversation.addMessage(dbPrivateMessage)

@@ -36,4 +36,13 @@ data class PrivateMessage(
         this.status = MessageStatus.DELETED
         return this
     }
+
+    fun toPrivateMessageDto() = PrivateMessageDto(
+        id = id,
+        text = if (status == MessageStatus.DELETED) "" else text,
+        timestamp = timestamp,
+        status = status,
+        userId = user.id!!,
+        privateConversationId = privateConversation.id!!,
+    )
 }
