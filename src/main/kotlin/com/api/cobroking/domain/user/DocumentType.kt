@@ -1,6 +1,6 @@
 package com.api.cobroking.domain.user
 
-enum class DocumentTypeEnum {
+enum class DocumentType {
     DNI,
     PASSPORT
 }

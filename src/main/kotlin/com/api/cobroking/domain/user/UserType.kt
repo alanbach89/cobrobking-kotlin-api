@@ -1,6 +1,6 @@
 package com.api.cobroking.domain.user
 
-enum class UserTypeEnum {
+enum class UserType {
     ADMIN,
     NON_PAID_CUSTOMER,
     PAID_CUSTOMER,

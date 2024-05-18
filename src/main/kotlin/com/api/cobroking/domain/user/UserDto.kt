@@ -13,7 +13,7 @@ data class UserDto(
     @field:Email
     val email: String,
     @field:NotBlank
-    val type: UserTypeEnum,
+    val type: UserType,
     @field:NotBlank
     @field:Size(min = 1, max = 50, message = "Firstname must be have from 1 to 50 characters")
     val firstname: String,
@@ -23,7 +23,7 @@ data class UserDto(
     @field:NotBlank
     val nationality: String,
     @field:NotBlank
-    val documentType: DocumentTypeEnum,
+    val documentType: DocumentType,
     @field:NotBlank
     @field:Size(min = 8, max = 20, message = "Document must be have from 4 to 20 characters")
     val document: String,

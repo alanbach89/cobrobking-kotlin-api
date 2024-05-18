@@ -1,6 +1,6 @@
 package com.api.cobroking.domain.transaction
 
-enum class PaymentStatusEnum {
+enum class PaymentStatus {
     PAID,
     NOT_PAID,
     PROCESSING,

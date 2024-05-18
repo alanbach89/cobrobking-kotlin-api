@@ -6,7 +6,6 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.validation.constraints.NotNull
 
 
 @Entity
@@ -17,16 +16,20 @@ class Transaction (
     @Column(nullable = false)
     val publicationId: Long,
 
+    @Enumerated
+    @Column(nullable = false)
+    val publicationType: PublicationType,
+
     @Column(nullable = false)
     val price: Double,
 
     @Enumerated
     @Column(nullable = false)
-    val paymentTypeEnum: PaymentTypeEnum,
+    val paymentType: PaymentType,
 
     @Enumerated
     @Column(nullable = false)
-    val status: PaymentStatusEnum,
+    val status: PaymentStatus,
 
     var errorReason: String?
 )

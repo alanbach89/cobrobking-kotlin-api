@@ -24,7 +24,7 @@ data class User(
     @Column(nullable = false)
     var email: String,
     @Column(nullable = false)
-    var type: UserTypeEnum,
+    var type: UserType,
     @Column(nullable = false)
     var firstname: String,
     @Column(nullable = false)
@@ -34,7 +34,7 @@ data class User(
     @Column(nullable = false)
     var document: String,
     @Column(nullable = false)
-    var documentType: DocumentTypeEnum,
+    var documentType: DocumentType,
     var phone: String,
 
     @OneToMany(mappedBy = "user")
@@ -54,8 +54,8 @@ data class User(
 
 ) : UserDetails {
 
-    constructor() : this(null, "", UserTypeEnum.NON_PAID_CUSTOMER, "", "", "",
-        "", DocumentTypeEnum.DNI, "", listOf(), listOf(),"", "", false,
+    constructor() : this(null, "", UserType.NON_PAID_CUSTOMER, "", "", "",
+        "", DocumentType.DNI, "", listOf(), listOf(),"", "", false,
         false, false, false, setOf())
 
     override fun getUsername(): String = username
