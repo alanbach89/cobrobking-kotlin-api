@@ -13,26 +13,26 @@ class PropertyOfferPublication(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @NotNull
+    @Column(nullable = false)
     @ManyToOne
     var property: Property,
 
-    @NotNull
+    @Column(nullable = false)
     @Enumerated
     var propertyOfferType: PropertyOfferType = PropertyOfferType.RENT,
 
-    @NotNull
+    @Column(nullable = false)
     @ManyToOne
     var user: User,
 
-    @NotNull
+    @Column(nullable = false)
     var title: String,
 
-    @NotNull
+    @Column(nullable = false)
     @Min(value = 1, message = "Rating must be greater than or equal to one")
     var price: Double,
 
-    @NotNull
+    @Column(nullable = false)
     @Enumerated
     var currency: Currency = Currency.ARS,
 
@@ -44,7 +44,7 @@ class PropertyOfferPublication(
 
     var mapRadius: Int? = null,
 
-    @NotNull
+    @Column(nullable = false)
     @Enumerated
     var status: PublicationStatus = PublicationStatus.INACTIVE
 ) {

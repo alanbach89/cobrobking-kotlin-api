@@ -6,17 +6,23 @@ import jakarta.validation.constraints.NotBlank
 
 class PropertyOfferPublicationDto (
     val id: Long,
+
     @field:NotBlank
     var propertyId: Long,
+
     @field:NotBlank
     var propertyOfferType: PropertyOfferType,
+
     @field:NotBlank
     var userId: Long,
+
     @field:NotBlank
     var title: String,
+
     @field:NotBlank
     @field:Min(value = 1, message = "Rating must be greater than or equal to one")
     var price: Double,
+
     @field:NotBlank
     var currency: Currency,
 
@@ -27,6 +33,7 @@ class PropertyOfferPublicationDto (
     var mapLongitude: Float,
 
     var mapRadius: Int,
+
     @field:NotBlank
     var status: PublicationStatus = PublicationStatus.INACTIVE
 )

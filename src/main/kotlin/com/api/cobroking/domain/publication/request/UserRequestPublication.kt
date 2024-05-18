@@ -18,7 +18,7 @@ class UserRequestPublication (
     @ManyToOne
     var user: User,
 
-    @NotNull
+    @Column(nullable = false)
     @Enumerated
     var status: PublicationStatus = PublicationStatus.INACTIVE
 ) {
