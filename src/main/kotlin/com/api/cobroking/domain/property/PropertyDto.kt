@@ -33,5 +33,5 @@ data class PropertyDto(
     @field:NotBlank
     var amenities: AmenitiesDto? = null,
 
-    var photos: List<PropertyPhotoDto>? = null
+    var photos: MutableList<PropertyPhotoDto>? = null
 )

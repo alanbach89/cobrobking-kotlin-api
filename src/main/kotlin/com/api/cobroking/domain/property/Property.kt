@@ -37,7 +37,7 @@ data class Property(
     var amenities: Amenities = Amenities(),
 
     @OneToMany
-    var photos: List<PropertyPhoto>? = mutableListOf()
+    var photos: MutableList<PropertyPhoto> = mutableListOf()
 ) {
     fun updateFromDto(propertyDto: PropertyDto): Property {
         this.description = description
@@ -63,6 +63,6 @@ data class Property(
         bathroomQty = bathroomQty!!,
         roomQty = roomQty!!,
         amenities = amenities?.toAmenitiesDto(),
-        photos = photos?.map { return@map it.toPropertyPhotoDto() }
+        photos = (photos?.map { return@map it.toPropertyPhotoDto() } as MutableList<PropertyPhotoDto>?)
     )
 }

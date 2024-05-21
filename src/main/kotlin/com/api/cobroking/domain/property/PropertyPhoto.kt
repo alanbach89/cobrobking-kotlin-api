@@ -3,8 +3,6 @@ package com.api.cobroking.domain.property
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "photo_property")
-
 class PropertyPhoto (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

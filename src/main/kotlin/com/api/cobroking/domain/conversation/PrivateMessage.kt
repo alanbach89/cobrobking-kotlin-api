@@ -11,11 +11,14 @@ import java.sql.Timestamp
 data class PrivateMessage(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long?,
+
     @Column(nullable = false)
     var text: String,
+
     @Column(nullable = false, insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     val timestamp: Timestamp,
+
     @Column(nullable = false)
     var status: MessageStatus,
 

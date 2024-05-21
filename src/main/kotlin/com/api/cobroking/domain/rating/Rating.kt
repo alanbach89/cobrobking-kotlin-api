@@ -10,14 +10,18 @@ import jakarta.validation.constraints.Max;
 class Rating (
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long?,
+
     @Column(nullable = false)
     var publicationType: PublicationType? = null,
+
     @Column(nullable = false)
     var publicationId: Long,
+
     @Column(nullable = false)
     @Min(value = 0, message = "Rating must be greater than or equal to zero")
     @Max(value = 5, message = "Rating must be less than or equal to 5")
     var rating: Int,
+
     var opinion: String?,
 
     @ManyToOne

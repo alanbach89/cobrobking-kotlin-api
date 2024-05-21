@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull
 
 
 @Entity
+@Table(name = "publication_user_request")
 class UserRequestPublication (
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,

@@ -14,7 +14,7 @@ class RatingService(private val ratingRepository: RatingRepository,
 ) : BaseService<RatingDto> {
 
     override fun create(newRatingDto: RatingDto): RatingDto {
-        if (ratingRepository.existsRatingByTypeAndPublicationId(newRatingDto.publicationType!!,
+        if (ratingRepository.existsRatingByPublicationTypeAndPublicationId(newRatingDto.publicationType!!,
                 newRatingDto.publicationId)) {
             throw RatingExistsException()
         }

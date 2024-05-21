@@ -9,11 +9,11 @@ import jakarta.validation.constraints.NotNull
 
 
 @Entity
+@Table(name = "publication_property_offer")
 class PropertyOfferPublication(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(nullable = false)
     @ManyToOne
     var property: Property,
 
@@ -21,7 +21,6 @@ class PropertyOfferPublication(
     @Enumerated
     var propertyOfferType: PropertyOfferType = PropertyOfferType.RENT,
 
-    @Column(nullable = false)
     @ManyToOne
     var user: User,
 

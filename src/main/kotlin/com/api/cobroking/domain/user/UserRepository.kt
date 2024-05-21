@@ -13,6 +13,6 @@ interface UserRepository : JpaRepository<User, Long> {
 
     fun findByUsername(username: String): Optional<User>
 
-    fun findByUsernamesIn(usernames: List<String>): MutableList<User>
+    fun findByUsernameIn(usernames: List<String>): MutableList<User>
 
 }

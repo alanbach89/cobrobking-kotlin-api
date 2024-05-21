@@ -32,7 +32,8 @@ class PropertyService(private val propertyRepository:  PropertyRepository): Base
             dto.amenities?.security
         )
 
-        var newPhotos = dto.photos?.map {  return@map getNewPhotoFromDto(it) }
+        var newPhotos: MutableList<PropertyPhoto> =
+            (dto.photos?.map {  return@map getNewPhotoFromDto(it) } as MutableList<PropertyPhoto>?)!!
 
         var newProperty = Property(
             null,

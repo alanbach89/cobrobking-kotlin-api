@@ -1,5 +1,6 @@
 package com.api.cobroking.config
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
@@ -19,6 +20,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 @Configuration
 @EnableWebSecurity
 class OAuth2LoginSecurityConfig {
+
+    @Value("spring.security.oauth2.client.registration.google.client-id")
+    private val googleClientId: String? = null
+
+    @Value("spring.security.oauth2.client.registration.google.client-secret")
+    private val googleClientSecret: String? = null
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -41,8 +48,8 @@ class OAuth2LoginSecurityConfig {
 
     private fun googleClientRegistration(): ClientRegistration {
         return ClientRegistration.withRegistrationId("google")
-            .clientId("google-client-id")
-            .clientSecret("google-client-secret")
+            .clientId(googleClientId)
+            .clientSecret(googleClientSecret)
             .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
             .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")

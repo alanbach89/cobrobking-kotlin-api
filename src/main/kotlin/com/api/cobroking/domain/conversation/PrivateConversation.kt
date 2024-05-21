@@ -30,7 +30,7 @@ data class PrivateConversation(
     fun createFromDto(privateConversationDto: PrivateConversationDto,
                       userRepository: UserRepository): PrivateConversation {
         this.title = title
-        this.participants = userRepository.findByUsernamesIn(privateConversationDto.participants)
+        this.participants = userRepository.findByUsernameIn(privateConversationDto.participants)
         return this
     }
 
