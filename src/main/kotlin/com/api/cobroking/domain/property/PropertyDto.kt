@@ -1,37 +1,52 @@
 package com.api.cobroking.domain.property
 
+import com.api.cobroking.domain.utils.PropertyType
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Size
 
 data class PropertyDto(
     var id: Long? = null,
 
     @field:NotBlank
-    var description: String? = null,
+    var description: String,
 
     @field:NotBlank
-    var location: String? = null,
+    var type: PropertyType,
+
+    @field:NotBlank
+    var country: String,
+
+    @field:NotBlank
+    var city: String,
+
+    @field:NotBlank
+    var neighborhood: String,
+
+    @field:NotBlank
+    var location: String,
 
     @field:NotBlank
     @field:Min(value = 0, message = "Size must be greater than or equal to zero")
-    var size: Double? = null,
+    var size: Double,
 
     @field:NotBlank
-    var internalSize: Double? = null,
+    var internalSize: Double,
 
     @field:NotBlank
-    var sizeUnit: String? = null,
+    var sizeUnit: String,
 
     @field:NotBlank
     @field:Min(value = 0, message = "Bathroom Quantity must be greater than or equal to zero")
-    var bathroomQty: Int? = 0,
+    var bathroomQty: Int,
 
     @field:NotBlank
     @field:Min(value = 1, message = "Room Quantity must be greater than or equal to one")
-    var roomQty: Int? = 1,
+    var roomQty: Int,
 
     @field:NotBlank
-    var amenities: AmenitiesDto? = null,
+    var amenities: AmenitiesDto,
 
-    var photos: MutableList<PropertyPhotoDto>? = null
+    @field:Size(min = 1, message = "Add at least one photo")
+    var photos: MutableList<PropertyPhotoDto>
 )

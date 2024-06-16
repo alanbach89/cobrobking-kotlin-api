@@ -12,6 +12,10 @@ class FlywayConfig {
 
     @Bean(initMethod = "migrate")
     fun configureFlyway(flywayProperties: FlywayProperties): Flyway? {
+        if (!flywayProperties.enabled) {
+            return null
+        }
+
         return Flyway.configure()
             .dataSource(
                 flywayProperties.url,
@@ -29,5 +33,6 @@ data class FlywayProperties(
     var url: String = "",
     var user: String = "",
     var password: String = "",
-    var locations: List<String> = emptyList()
+    var locations: List<String> = emptyList(),
+    var enabled: Boolean = true
 )

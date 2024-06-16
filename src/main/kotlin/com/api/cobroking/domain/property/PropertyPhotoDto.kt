@@ -11,8 +11,11 @@ data class PropertyPhotoDto (
     var text: String? = null,
 
     @field:NotBlank
-    var url: Boolean? = null,
+    var url: String,
 
     @field:NotBlank
-    var isPrincipal: Boolean? = false
+    var isPrincipal: Boolean,
+
+    @field:NotBlank
+    var order: Int
 )

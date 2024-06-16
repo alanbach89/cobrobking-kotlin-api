@@ -61,6 +61,9 @@ data class Amenities(
     @Column(nullable = false)
     var security: Boolean? = false
 ) {
+    constructor() : this(null, null, false, false, false, false, false,
+        false, false, false, false, false, false, false,
+        false, false, false, false)
     fun updateFromDto(amenitiesDto: AmenitiesDto): Amenities {
         this.balcony = balcony
         this.pool = pool

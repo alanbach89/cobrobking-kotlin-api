@@ -54,6 +54,7 @@ dependencies {
 	implementation("org.flywaydb:flyway-mysql")
 	implementation("org.jetbrains.kotlin:kotlin-noarg")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("io.jsonwebtoken:jjwt:0.9.1")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
   	//developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 	runtimeOnly("org.mariadb.jdbc:mariadb-java-client")

@@ -1,25 +1,26 @@
 package com.api.cobroking.domain.user
 
-import com.api.cobroking.annotation.NoArg
 import com.api.cobroking.domain.conversation.PrivateConversation
 import com.api.cobroking.domain.conversation.PrivateMessage
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.ManyToMany
 import jakarta.persistence.OneToMany
 import jakarta.validation.constraints.Email
+import org.hibernate.annotations.JdbcTypeCode
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import java.sql.Timestamp
+import java.util.UUID
 
 
 @Entity
-@NoArg
 data class User(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long?,
+    @Id @JdbcTypeCode(java.sql.Types.VARCHAR)
+    var id: UUID?,
+    private var username: String,
+    private var password: String,
     @Email
     @Column(nullable = false)
     var email: String,
@@ -44,27 +45,34 @@ data class User(
     val conversations: List<PrivateConversation> = listOf(),
 
     // inherits from UserDetails
-    private var username: String,
-    private val password: String,
-    private val isEnabled: Boolean, //Disabled account can not log in
-    private val isCredentialsNonExpired: Boolean, //credential can be expired,eg. Change the password every three months
-    private val isAccountNonExpired: Boolean, //eg. Demo account（guest） can only be online  24 hours
-    private val isAccountNonLocked: Boolean, //eg. Users who malicious attack system,lock their account for one year
-    private val authorities: Set<GrantedAuthority>
+    private var isEnabled: Boolean, //Disabled account can not log in
+    private var isCredentialsNonExpired: Boolean, //credential can be expired,eg. Change the password every three months
+    private var isAccountNonExpired: Boolean, //eg. Demo account（guest） can only be online  24 hours
+    private var isAccountNonLocked: Boolean, //eg. Users who malicious attack system,lock their account for one year
+    private var authorities: Set<GrantedAuthority>,
+    var provider: String,
+    var providerId: String,
+    var imgUrl: String,
+    var lastLogin: Timestamp?
 
 ) : UserDetails {
 
-    constructor() : this(null, "", UserType.NON_PAID_CUSTOMER, "", "", "",
-        "", DocumentType.DNI, "", listOf(), listOf(),"", "", false,
-        false, false, false, setOf())
+    constructor() : this(null, "", "", "", UserType.NON_PAID_CUSTOMER, "", "",
+        "", "", DocumentType.DNI, "", listOf(), listOf(),false,
+        false, false, false, setOf(), "", "",
+        "", null
+    )
 
     override fun getUsername(): String = username
+
+    fun setUsername(username: String) { this.username = username }
     override fun getPassword(): String = password
+    fun setPassword(password: String) { this.password = password }
     override fun isEnabled(): Boolean = isEnabled
     override fun isCredentialsNonExpired(): Boolean = isCredentialsNonExpired
     override fun isAccountNonExpired(): Boolean = isAccountNonExpired
     override fun isAccountNonLocked(): Boolean = isAccountNonLocked
-    override fun getAuthorities(): Set<out GrantedAuthority> = authorities
+    override fun getAuthorities(): Set<GrantedAuthority> = authorities
 
     fun updateFromDto(userDto: UserDto): User {
         this.email = email
@@ -74,6 +82,7 @@ data class User(
         this.documentType = documentType
         this.nationality = nationality
         this.phone = phone
+        this.imgUrl = imgUrl
         return this
     }
 
@@ -99,6 +108,7 @@ data class User(
         document = document,
         documentType = documentType,
         nationality = nationality,
-        phone = phone
+        phone = phone,
+        imgUrl = imgUrl
     )
 }

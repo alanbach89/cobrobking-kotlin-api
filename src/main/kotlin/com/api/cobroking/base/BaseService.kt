@@ -1,14 +1,14 @@
 package com.api.cobroking.base
 
-interface BaseService<T> {
+interface BaseService<T,K> {
 
     fun create(dto: T): T
 
-    fun update(id: Long, dto: T): T
+    fun update(id: K, dto: T): T
 
-    fun getById(id: Long): T
+    fun getById(id: K): T
 
-    fun deleteById(id: Long)
+    fun deleteById(id: K)
 
     fun  getAll(): List<T>
 }

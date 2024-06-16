@@ -10,33 +10,34 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import java.util.UUID
 
 @RestController
 @RequestMapping("/users")
 class UserController(val userService : UserService) {
 
-    @PostMapping()
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     fun createUser(@RequestBody userDto: UserDto): UserDto {
-        return userService.create(userDto);
+        return userService.create(userDto)
     }
 
     @PutMapping("/{id}")
     @ResponseBody
-    fun updateUser(@RequestParam id: Long, @RequestBody userDto: UserDto): UserDto {
-        return userService.update(id, userDto);
+    fun updateUser(@RequestParam id: UUID, @RequestBody userDto: UserDto): UserDto {
+        return userService.update(id, userDto)
     }
 
-   @GetMapping("/{id}")
+    @GetMapping("/{id}")
     @ResponseBody
-    fun getUser(@RequestParam id: Long): UserDto {
-        return userService.getById(id);
+    fun getUser(@RequestParam id: UUID): UserDto {
+        return userService.getById(id)
     }
 
-    @GetMapping()
+    @GetMapping
     @ResponseBody
     fun getAllUsers(): List<UserDto> {
-        return userService.getAll();
+        return userService.getAll()
     }
 }

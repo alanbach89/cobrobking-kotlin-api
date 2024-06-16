@@ -1,7 +1,6 @@
 package com.api.cobroking.domain.rating;
 
 import com.api.cobroking.domain.user.User
-import com.api.cobroking.domain.user.UserRepository
 import jakarta.persistence.*
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;

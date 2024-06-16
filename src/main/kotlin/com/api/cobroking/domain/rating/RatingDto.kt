@@ -3,6 +3,7 @@ package com.api.cobroking.domain.rating
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
+import java.util.*
 
 data class RatingDto(
     val id: Long? = null,
@@ -16,5 +17,5 @@ data class RatingDto(
     var rating: Int,
     var opinion: String,
     @field:NotBlank
-    var userId: Long
+    var userId: UUID
 )

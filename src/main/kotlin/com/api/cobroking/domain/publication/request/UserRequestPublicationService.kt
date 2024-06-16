@@ -2,21 +2,39 @@ package com.api.cobroking.domain.publication.request
 
 import com.api.cobroking.base.BaseService
 import com.api.cobroking.base.exception.UserRequestPublicationNotFoundException
+import com.api.cobroking.domain.publication.property.PublicationStatus
 import com.api.cobroking.domain.user.UserRepository
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
+import java.sql.Timestamp
+import java.time.Instant
 
 @Service
 class UserRequestPublicationService(private val userRequestPublicationRepository: UserRequestPublicationRepository,
                                     private val userRepository: UserRepository
-                                    ): BaseService<UserRequestPublicationDto> {
+                                    ): BaseService<UserRequestPublicationDto, Long> {
 
     override fun create(dto: UserRequestPublicationDto): UserRequestPublicationDto {
         var newUserRequestPublication = UserRequestPublication(
             null,
             dto.title,
             dto.text,
-            userRepository.getReferenceById(dto.userId)
+            userRepository.getReferenceById(dto.userId),
+            PublicationStatus.INACTIVE,
+            dto.priceFrom,
+            dto.priceTo,
+            dto.currency,
+            dto.country,
+            dto.city,
+            dto.neighborhoods,
+            dto.roomQtys,
+            dto.requestType,
+            dto.propertyType,
+            0,
+            false,
+            Timestamp.from(Instant.now()),
+            null,
+            null
         )
         var savedUserRequestPublication: UserRequestPublication =
             userRequestPublicationRepository.save(newUserRequestPublication)

@@ -3,6 +3,7 @@ package com.api.cobroking.domain.conversation
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
 import java.sql.Timestamp
+import java.util.*
 
 class PrivateMessageDto(
 
@@ -13,7 +14,7 @@ class PrivateMessageDto(
     val timestamp: Timestamp? = null,
     val status: MessageStatus = MessageStatus.CREATED,
     @field:NotBlank
-    val userId: Long,
+    val userId: UUID,
     @field:NotBlank
     val privateConversationId: Long,
 )

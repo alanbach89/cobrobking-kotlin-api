@@ -6,12 +6,14 @@ import com.api.cobroking.domain.property.PropertyRepository
 import com.api.cobroking.domain.user.UserRepository
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
+import java.sql.Timestamp
+import java.time.Instant
 
 @Service
 class PropertyOfferPublicationService(private val propertyOfferPublicationRepository: PropertyOfferPublicationRepository,
                                       private val propertyRepository: PropertyRepository,
                                       private val userRepository: UserRepository
-): BaseService<PropertyOfferPublicationDto> {
+                                      ): BaseService<PropertyOfferPublicationDto, Long> {
 
     override fun create(dto: PropertyOfferPublicationDto): PropertyOfferPublicationDto {
         var newPropertyOfferPublication = PropertyOfferPublication(
@@ -25,7 +27,13 @@ class PropertyOfferPublicationService(private val propertyOfferPublicationReposi
             dto.maxOccupants,
             dto.mapLatitude,
             dto.mapLongitude,
-            dto.mapRadius
+            dto.mapRadius,
+            PublicationStatus.INACTIVE,
+            0,
+            false,
+            Timestamp.from(Instant.now()),
+            null,
+            null
         )
         var savedPropertyOfferPublication: PropertyOfferPublication =
             propertyOfferPublicationRepository.save(newPropertyOfferPublication)

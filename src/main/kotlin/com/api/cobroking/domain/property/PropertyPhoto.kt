@@ -3,7 +3,7 @@ package com.api.cobroking.domain.property
 import jakarta.persistence.*
 
 @Entity
-class PropertyPhoto (
+class PropertyPhoto(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -14,15 +14,21 @@ class PropertyPhoto (
     var text: String? = null,
 
     @Column(nullable = false)
-    var url: Boolean? = null,
+    var url: String,
 
     @Column(nullable = false)
-    var isPrincipal: Boolean? = false
+    var isPrincipal: Boolean = false,
+
+    @Column(nullable = false)
+    var order: Int = 0
 ) {
+    constructor() : this(null, null, null, "", false, 0)
+
     fun updateFromDto(propertyPhotoDto: PropertyPhotoDto): PropertyPhoto {
         this.text = text
         this.url = url
         this.isPrincipal = isPrincipal
+        this.order = order
         return this
     }
 
@@ -30,7 +36,8 @@ class PropertyPhoto (
         id = id!!,
         propertyId = property?.id,
         text = text!!,
-        url = url!!,
-        isPrincipal = isPrincipal!!
+        url = url,
+        isPrincipal = isPrincipal,
+        order = order
     )
 }

@@ -11,23 +11,23 @@ import org.springframework.stereotype.Service
 @Service
 class RatingService(private val ratingRepository: RatingRepository,
                     private val userRepository: UserRepository
-) : BaseService<RatingDto> {
+) : BaseService<RatingDto, Long> {
 
-    override fun create(newRatingDto: RatingDto): RatingDto {
-        if (ratingRepository.existsRatingByPublicationTypeAndPublicationId(newRatingDto.publicationType!!,
-                newRatingDto.publicationId)) {
+    override fun create(dto: RatingDto): RatingDto {
+        if (ratingRepository.existsRatingByPublicationTypeAndPublicationId(dto.publicationType!!,
+                dto.publicationId)) {
             throw RatingExistsException()
         }
 
-        val user: User = userRepository.getReferenceById(newRatingDto.id!!)
-        var newRating = Rating(null, newRatingDto.publicationType, newRatingDto.publicationId,
-            newRatingDto.rating, newRatingDto.opinion, user)
+        val user: User = userRepository.getReferenceById(dto.userId)
+        var newRating = Rating(null, dto.publicationType, dto.publicationId,
+            dto.rating, dto.opinion, user)
 
         var savedRating: Rating = ratingRepository.save(newRating)
         return savedRating.toRatingDto()
     }
 
-    override fun update(id: Long, entity: RatingDto): RatingDto {
+    override fun update(id: Long, dto: RatingDto): RatingDto {
         TODO("Not yet implemented")
     }
 

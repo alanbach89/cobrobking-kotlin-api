@@ -3,9 +3,11 @@ package com.api.cobroking.domain.user
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
+import java.sql.Timestamp
+import java.util.*
 
 data class UserDto(
-    val id: Long? = null,
+    val id: UUID? = null,
     @field:NotBlank
     @field:Size(min = 4, max = 20, message = "Username must be have from 4 to 20 characters")
     val username: String,
@@ -16,10 +18,10 @@ data class UserDto(
     val type: UserType,
     @field:NotBlank
     @field:Size(min = 1, max = 50, message = "Firstname must be have from 1 to 50 characters")
-    val firstname: String,
+    var firstname: String,
     @field:NotBlank
     @field:Size(min = 1, max = 50, message = "Lastname must be have from 1 to 50 characters")
-    val lastname: String,
+    var lastname: String,
     @field:NotBlank
     val nationality: String,
     @field:NotBlank
@@ -28,5 +30,6 @@ data class UserDto(
     @field:Size(min = 8, max = 20, message = "Document must be have from 4 to 20 characters")
     val document: String,
     @field:NotBlank
-    val phone: String
+    val phone: String,
+    var imgUrl: String
 )

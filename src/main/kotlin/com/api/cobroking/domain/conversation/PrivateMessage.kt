@@ -2,7 +2,6 @@ package com.api.cobroking.domain.conversation
 
 import com.api.cobroking.annotation.NoArg
 import com.api.cobroking.domain.user.User
-import com.api.cobroking.domain.user.UserRepository
 import jakarta.persistence.*
 import java.sql.Timestamp
 

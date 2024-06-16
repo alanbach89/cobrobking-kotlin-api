@@ -2,35 +2,16 @@ package com.api.cobroking.domain.property
 
 import com.api.cobroking.base.BaseService
 import com.api.cobroking.base.exception.PropertyNotFoundException
-import com.api.cobroking.domain.user.UserRepository
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
 
 @Service
-class PropertyService(private val propertyRepository:  PropertyRepository): BaseService<PropertyDto> {
+class PropertyService(private val propertyRepository:  PropertyRepository): BaseService<PropertyDto, Long> {
 
     override fun create(dto: PropertyDto): PropertyDto {
 
-        var newAmenities = Amenities(
-            null,
-            null,
-            dto.amenities?.balcony,
-            dto.amenities?.pool,
-            dto.amenities?.laundry,
-            dto.amenities?.eventSpace,
-            dto.amenities?.gym,
-            dto.amenities?.openView,
-            dto.amenities?.garage,
-            dto.amenities?.airConditioning,
-            dto.amenities?.expenses,
-            dto.amenities?.propertyTax,
-            dto.amenities?.water,
-            dto.amenities?.cable,
-            dto.amenities?.internet,
-            dto.amenities?.gas,
-            dto.amenities?.bedLinens,
-            dto.amenities?.security
-        )
+        var newAmenities = Amenities()
+        newAmenities.updateFromDto(dto.amenities)
 
         var newPhotos: MutableList<PropertyPhoto> =
             (dto.photos?.map {  return@map getNewPhotoFromDto(it) } as MutableList<PropertyPhoto>?)!!
@@ -38,6 +19,10 @@ class PropertyService(private val propertyRepository:  PropertyRepository): Base
         var newProperty = Property(
             null,
             dto.description,
+            dto.type,
+            dto.country,
+            dto.city,
+            dto.neighborhood,
             dto.location,
             dto.size,
             dto.internalSize,
@@ -66,8 +51,8 @@ class PropertyService(private val propertyRepository:  PropertyRepository): Base
 
         var updatedPhotoMap: Map<Long?, PropertyPhotoDto> = dto.photos?.associateBy { it.id }!!
         var updatedPhotoList: MutableList<PropertyPhoto> = dbProperty.photos
-            ?.filter { return@filter updatedPhotoMap.contains(it.id) }
-            ?.map {  return@map it.updateFromDto(updatedPhotoMap[it.id]!!)}?.toMutableList()!!
+            .filter { return@filter updatedPhotoMap.contains(it.id) }
+            .map {  return@map it.updateFromDto(updatedPhotoMap[it.id]!!)}?.toMutableList()!!
 
         // Deleted elements are not in the list anymore
         val currentPhotoList: MutableList<PropertyPhoto> = mutableListOf()
@@ -75,7 +60,7 @@ class PropertyService(private val propertyRepository:  PropertyRepository): Base
         currentPhotoList.addAll(newPhotoList)
 
         dbProperty.photos = currentPhotoList
-        dbProperty.amenities?.updateFromDto(dto.amenities!!)
+        dbProperty.amenities.updateFromDto(dto.amenities!!)
 
         var savedProperty: Property =
             propertyRepository.save(dbProperty.updateFromDto(dto))
@@ -91,7 +76,11 @@ class PropertyService(private val propertyRepository:  PropertyRepository): Base
     }
 
     override fun deleteById(id: Long) {
-        this.propertyRepository.deleteById(id)
+        try {
+            this.propertyRepository.deleteById(id)
+        } catch (e: EntityNotFoundException) {
+            throw PropertyNotFoundException()
+        }
     }
 
     override fun getAll(): List<PropertyDto> {
@@ -99,12 +88,7 @@ class PropertyService(private val propertyRepository:  PropertyRepository): Base
     }
 
     private fun getNewPhotoFromDto(dto: PropertyPhotoDto): PropertyPhoto {
-        return PropertyPhoto(
-            null,
-            null,
-            dto?.text,
-            dto?.url,
-            dto?.isPrincipal
-        )
+        //var newPhoto = PropertyPhoto()
+        return PropertyPhoto().updateFromDto(dto)
     }
 }
