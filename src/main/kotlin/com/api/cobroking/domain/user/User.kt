@@ -2,6 +2,8 @@ package com.api.cobroking.domain.user
 
 import com.api.cobroking.domain.conversation.PrivateConversation
 import com.api.cobroking.domain.conversation.PrivateMessage
+import com.api.cobroking.domain.security.dtos.SignUpDto
+import com.api.cobroking.domain.utils.DocumentType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -19,6 +21,7 @@ import java.util.UUID
 data class User(
     @Id @JdbcTypeCode(java.sql.Types.VARCHAR)
     var id: UUID?,
+    @Column(nullable = false, unique = true)
     private var username: String,
     private var password: String,
     @Email
@@ -111,4 +114,17 @@ data class User(
         phone = phone,
         imgUrl = imgUrl
     )
+
+    fun createFromSignUp(dto: SignUpDto): User {
+        this.username = username
+        this.password = password
+        this.email = email
+        this.type
+        this.firstname = firstname
+        this.lastname = lastname
+        this.documentType = documentType
+        this.nationality = nationality
+        this.phone = phone
+        return this
+    }
 }

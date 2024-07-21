@@ -1,22 +1,18 @@
-package com.api.cobroking.domain.user
+package com.api.cobroking.domain.security.dtos
 
+import com.api.cobroking.domain.user.UserType
 import com.api.cobroking.domain.utils.DocumentType
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
-import java.sql.Timestamp
-import java.util.*
 
-data class UserDto(
-    val id: UUID? = null,
+data class SignUpDto(
     @field:NotBlank
     @field:Size(min = 4, max = 20, message = "Username must be have from 4 to 20 characters")
     val username: String,
     @field:NotBlank
     @field:Email
     val email: String,
-    @field:NotBlank
-    val type: UserType,
     @field:NotBlank
     @field:Size(min = 1, max = 50, message = "Firstname must be have from 1 to 50 characters")
     var firstname: String,
@@ -32,5 +28,6 @@ data class UserDto(
     val document: String,
     @field:NotBlank
     val phone: String,
-    var imgUrl: String
+
+    val type: UserType?
 )

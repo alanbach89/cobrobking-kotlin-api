@@ -19,6 +19,8 @@ interface UserRepository : JpaRepository<User, UUID> {
     @EntityGraph(attributePaths = ["authorities"])
     fun findByUsername(username: String): Optional<User>
 
+    fun findByEmail(email: String): Optional<User>
+
     fun findByUsernameIn(usernames: List<String>): MutableList<User>
 
     @Modifying

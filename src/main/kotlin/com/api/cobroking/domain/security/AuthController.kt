@@ -1,36 +1,71 @@
 package com.api.cobroking.domain.security
 
+import com.api.cobroking.domain.security.dtos.SignInDto
+import com.api.cobroking.domain.security.dtos.SignUpDto
+import com.api.cobroking.domain.security.dtos.JwtAuthenticationResponseDto
+import com.api.cobroking.domain.security.jwt.JwtService
 import jakarta.servlet.http.HttpServletRequest
+import jakarta.validation.Valid
+import org.springframework.data.repository.query.Param
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.Authentication
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 
 @RestController
 @RequestMapping("/auth")
-class AuthController( ) {
+class AuthController(
+    val jwtService: JwtService,
+    val authService: AuthService
+) {
 
-   @PostMapping("/sign_up")
-    fun signUp(@RequestBody signUpDto: SignUpDto): ResponseEntity<String> {
-        val userAndToken = authService.signUp(signUpDto)
-        return ResponseEntity.ok(userAndToken)
+
+    /**
+     * Register new user and login
+     */
+   @PostMapping("/sign-up")
+    fun signUp( @Valid @RequestBody signUpDto: SignUpDto): ResponseEntity<JwtAuthenticationResponseDto> {
+        val token = authService.signUp(signUpDto)
+        return ResponseEntity.ok(JwtAuthenticationResponseDto(token))
     }
 
-    @PostMapping("/sign_in")
-    fun signIn(@RequestBody signInDto: SignInDto): ResponseEntity<String> {
-        val userAndToken = authService.signIn(signInDto)
-        return ResponseEntity.ok(userAndToken)
+
+    /**
+     * Login new user
+     */
+    @PostMapping("/sign-in")
+    fun signIn( @Valid @RequestBody signInDto: SignInDto): ResponseEntity<JwtAuthenticationResponseDto> {
+        val token = authService.signIn(signInDto)
+        return ResponseEntity.ok(JwtAuthenticationResponseDto(token))
     }
 
-    @GetMapping("refresh_token")
-    fun refreshToken(request: HttpServletRequest): ResponseEntity<Map<String, String>> {
-        val claims = request.getAttribute(Constant.CLAIMS) as Claims
-        val token = authService.getRefreshToken(claims = claims)
+    @GetMapping("refresh-token")
+    fun refreshToken(request: HttpServletRequest): ResponseEntity<Any> {
+        return if(authService.isAuthenticated(request)) {
+            val token = authService.getRefreshToken(request)
+            ResponseEntity.ok(JwtAuthenticationResponseDto(token))
+        } else {
+            ResponseEntity.badRequest().body("User is not Authenticated")
+        }
 
-        return ResponseEntity.ok(mapOf("token" to token))
+    }
+
+    /**
+     * Checks is a given email is in use or not.
+     */
+    @GetMapping("/check-email-in-use")
+    fun checkEmailInUse(@Param(value = "Email id to check against") @RequestParam("email") email: String):
+            ResponseEntity<String> {
+        val emailExists: Boolean = authService.emailAlreadyExists(email)
+        return ResponseEntity.ok(emailExists.toString())
+    }
+
+    /**
+     * Checks is a given username is in use or not.
+     */
+    @GetMapping("/check-username-in-use")
+    fun checkUsernameInUse(@Param(value = "Username to check against") @RequestParam("username") username: String):
+            ResponseEntity<String>? {
+        val usernameExists: Boolean = authService.usernameAlreadyExists(username)
+        return ResponseEntity.ok(usernameExists.toString())
     }
 }

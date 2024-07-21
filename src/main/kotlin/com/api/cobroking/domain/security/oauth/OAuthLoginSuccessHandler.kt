@@ -1,5 +1,6 @@
-package com.api.cobroking.domain.security
+package com.api.cobroking.domain.security.oauth
 
+import com.api.cobroking.domain.security.dtos.CustomOAuth2UserInfoDto
 import com.api.cobroking.domain.user.User
 import com.api.cobroking.domain.user.UserRepository
 import jakarta.servlet.ServletException

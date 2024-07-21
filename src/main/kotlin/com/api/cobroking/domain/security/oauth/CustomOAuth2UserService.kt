@@ -1,5 +1,6 @@
-package com.api.cobroking.domain.security
+package com.api.cobroking.domain.security.oauth
 
+import com.api.cobroking.domain.security.dtos.CustomOAuth2UserDto
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.core.user.OAuth2User

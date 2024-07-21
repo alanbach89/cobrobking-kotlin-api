@@ -1,6 +1,5 @@
 package com.api.cobroking.domain.security
 
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/login")
-class LoginController {
+class OauthLoginController {
 
     @GetMapping("/oauth2/code/google")
     fun login(authentication: Authentication?): Any? {

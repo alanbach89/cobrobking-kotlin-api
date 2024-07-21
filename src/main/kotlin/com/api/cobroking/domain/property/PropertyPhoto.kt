@@ -20,7 +20,7 @@ class PropertyPhoto(
     var isPrincipal: Boolean = false,
 
     @Column(nullable = false)
-    var order: Int = 0
+    var assignedOrder: Int = 0
 ) {
     constructor() : this(null, null, null, "", false, 0)
 
@@ -28,7 +28,7 @@ class PropertyPhoto(
         this.text = text
         this.url = url
         this.isPrincipal = isPrincipal
-        this.order = order
+        this.assignedOrder = assignedOrder
         return this
     }
 
@@ -38,6 +38,6 @@ class PropertyPhoto(
         text = text!!,
         url = url,
         isPrincipal = isPrincipal,
-        order = order
+        assignedOrder = assignedOrder
     )
 }

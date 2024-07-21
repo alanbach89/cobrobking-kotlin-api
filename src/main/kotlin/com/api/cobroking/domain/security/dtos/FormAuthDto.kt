@@ -1,4 +1,4 @@
-package com.api.cobroking.domain.security
+package com.api.cobroking.domain.security.dtos
 
 data class FormAuthDto(
     val provider: String = "LOCAL",

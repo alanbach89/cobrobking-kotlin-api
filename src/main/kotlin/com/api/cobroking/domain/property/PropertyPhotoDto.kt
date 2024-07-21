@@ -17,5 +17,5 @@ data class PropertyPhotoDto (
     var isPrincipal: Boolean,
 
     @field:NotBlank
-    var order: Int
+    var assignedOrder: Int
 )

@@ -1,4 +1,4 @@
-package com.api.cobroking.domain.user
+package com.api.cobroking.domain.utils
 
 enum class DocumentType {
     DNI,

@@ -1,18 +1,26 @@
 package com.api.cobroking.config
 
-import com.api.cobroking.domain.security.CustomOAuth2UserService
+import com.api.cobroking.domain.security.oauth.CustomOAuth2UserService
 import com.api.cobroking.domain.security.DatabaseLoginSuccessHandler
-import com.api.cobroking.domain.security.OAuthLoginSuccessHandler
+import com.api.cobroking.domain.security.jwt.JwtAuthenticationFilter
+import com.api.cobroking.domain.security.oauth.OAuthLoginSuccessHandler
+import com.api.cobroking.domain.user.UserService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpStatus
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.AuthenticationProvider
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer
+import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProviderBuilder
-import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler
 import org.springframework.security.oauth2.client.registration.ClientRegistration
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository
@@ -22,16 +30,17 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod
 import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.authentication.HttpStatusEntryPoint
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 
 @Configuration
 @EnableWebSecurity
 class OAuth2LoginSecurityConfig(
-    val customOAuth2UserService: CustomOAuth2UserService,
-    val oauthLoginSuccessHandler: OAuthLoginSuccessHandler,
-    val databaseLoginSuccessHandler: DatabaseLoginSuccessHandler
+    private val customOAuth2UserService: CustomOAuth2UserService,
+    private val userService: UserService,
+    private val oauthLoginSuccessHandler: OAuthLoginSuccessHandler,
+    private val databaseLoginSuccessHandler: DatabaseLoginSuccessHandler,
+    private val jwtAuthenticationFilter: JwtAuthenticationFilter
     ) {
 
     @Value("\${spring.security.oauth2.client.registration.google.client-id}")
@@ -49,7 +58,7 @@ class OAuth2LoginSecurityConfig(
             //.securityMatcher(AntPathRequestMatcher("/api/**"))
             .authorizeHttpRequests { authorizeRequests ->
                 authorizeRequests
-                    .requestMatchers("/", "/login", "/oauth/**").permitAll()
+                    .requestMatchers("/", "/login", "/oauth/**", "/auth/**").permitAll()
                     //.requestMatchers("/**").hasRole("USER")
                     //.requestMatchers("/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
@@ -81,8 +90,16 @@ class OAuth2LoginSecurityConfig(
                             .accessTokenResponseClient(accessTokenResponseClient)
                     }
             }*/
+            .sessionManagement { manager: SessionManagementConfigurer<HttpSecurity?> ->
+                manager.sessionCreationPolicy(
+                    SessionCreationPolicy.STATELESS
+                )
+            }
+            .authenticationProvider(authenticationProvider()).addFilterBefore(
+                jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java
+            )
             .logout{
-                    it.logoutSuccessUrl("/login").permitAll()
+                it.logoutSuccessUrl("/login").permitAll()
             }
         return http.build()
     }
@@ -123,5 +140,24 @@ class OAuth2LoginSecurityConfig(
             clientRegistrationRepository, authorizedClientRepository)
         authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider)
         return authorizedClientManager
+    }
+
+    @Bean
+    fun passwordEncoder(): PasswordEncoder? {
+        return BCryptPasswordEncoder()
+    }
+
+    @Bean
+    @Throws(Exception::class)
+    fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager? {
+        return config.authenticationManager
+    }
+
+    @Bean
+    fun authenticationProvider(): AuthenticationProvider? {
+        val authProvider = DaoAuthenticationProvider()
+        authProvider.setUserDetailsService(userService.userDetailsService())
+        authProvider.setPasswordEncoder(passwordEncoder())
+        return authProvider
     }
 }

@@ -1,4 +1,4 @@
-package com.api.cobroking.domain.security
+package com.api.cobroking.domain.security.dtos
 
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.oauth2.core.user.OAuth2User
